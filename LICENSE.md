@@ -1,4 +1,3 @@
-http://opensource.org/licenses/mit-license.php
 The MIT License (MIT)
 Copyright (c) 2012 satoshi 'ron' tamura.
 
