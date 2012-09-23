@@ -6,7 +6,6 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import ronsoftware.inputtemplate.ContentBuilder;
 import ronsoftware.inputtemplate.ContentDumper;
 import ronsoftware.inputtemplate.ContentList;
 import ronsoftware.inputtemplate.Parser;
@@ -80,47 +79,4 @@ public class ParserTest {
 		}
 		
 	}
-	
-	private ContentList createStandardCase() {
-		
-		ContentBuilder builder = new ContentBuilder();
-		builder
-			.addAtom("a b c\n")
-			.addList()
-				.addList()
-					.addAtom("a\n")
-					.getParent()
-				.addList()
-					.addAtom("b\n")
-					.getParent()
-				.addList()
-					.addAtom("c\n")
-					.getParent()
-				.getParent()
-			.addAtom(" a b c ")
-			.addList()
-				.addAtom("a b c");
-		
-		return builder.getRoot();
-	}
-	
-	private ContentList createEscapeCase() {
-		
-		ContentBuilder builder = new ContentBuilder();
-		builder
-			.addAtom("a b c\n[")
-			.addList()
-				.addAtom("a\n")
-				.getParent()
-			.addList()
-				.addAtom("b\n")
-				.getParent()
-			.addList()
-				.addAtom("c\n")
-				.getParent()
-			.addAtom("] a b c [a b c]");
-		
-		return builder.getRoot();
-	}
-	
 }

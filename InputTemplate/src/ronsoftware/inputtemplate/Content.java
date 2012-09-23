@@ -3,7 +3,7 @@ package ronsoftware.inputtemplate;
 /**
  * Represents a template content element.
  */
-public abstract class Content {
+public abstract class Content implements Cloneable {
 	
 	private String id;
 	
@@ -45,4 +45,14 @@ public abstract class Content {
 	public String toString() {
 		return super.toString();
 	}
+
+	@Override
+	public Content clone() {
+		try {
+			return (Content) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 }

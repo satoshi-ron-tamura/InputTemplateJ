@@ -42,4 +42,9 @@ public class ContentAtom extends Content {
 		return text;
 	}
 
+	@Override
+	public ContentAtom clone() {
+		return (ContentAtom) super.clone();
+	}
+
 }

@@ -15,6 +15,15 @@ public class ContentList extends Content
 	private List<Content> contents = new ArrayList<Content>();
 
 	@Override
+	public ContentList clone() {
+		ContentList newList = new ContentList();
+		for (Content item : this) {
+			newList.add(item.clone());
+		}
+		return newList;
+	}
+	
+	@Override
 	public int hashCode() {
 		int result = 0;
 		if (contents == null)
