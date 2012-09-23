@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
-import ronsoftware.inputtemplate.ContentDumper;
+import ronsoftware.inputtemplate.ContentPrinter;
 import ronsoftware.inputtemplate.ContentList;
 import ronsoftware.inputtemplate.Parser;
 import ronsoftware.inputtemplate.ParserException;
@@ -62,16 +62,15 @@ public class ParserTest {
 		ContentList expected) {
 		
 		InputStream in = createInput(toParse, DEFAULT_CHARSET_NAME);
-		ContentDumper dumper = new ContentDumper();
-		dumper.setIndentStr(">");
+		ContentPrinter printer = new ContentPrinter();
 		
 		try {
 			
 			Parser ps = new Parser(in, DEFAULT_CHARSET_NAME);
 			ContentRoot parsed = ps.parse();
 			assertEquals(msg,
-				dumper.getDump(expected), 
-				dumper.getDump(parsed.getContents()));
+				printer.getPrint(expected), 
+				printer.getPrint(parsed.getContents()));
 			assertEquals(msg, expected, parsed.getContents());
 			
 		} catch (Exception e) {
