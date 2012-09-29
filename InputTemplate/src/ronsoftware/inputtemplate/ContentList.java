@@ -13,14 +13,37 @@ public class ContentList extends Content
 	implements List<Content> {
 	
 	private List<Content> contents = new ArrayList<Content>();
-
+	
 	@Override
-	public ContentList clone() {
+	protected Content doClone() {
 		ContentList newList = new ContentList();
 		for (Content item : this) {
 			newList.add(item.clone());
 		}
 		return newList;
+	}
+	
+	protected void notifyWhenAdd(Content item) {
+		
+		if (item == null) {
+			return;
+		}
+		
+		if (item.isList()) {
+			ContentList itemList = item.asList();
+			for (Content c : itemList) {
+				if (c != null) {
+					notifyWhenAdd(c);
+				}
+			}
+		}
+		
+		notifyUpdateId(null, item);
+	}
+	
+	@Override
+	public ContentList clone() {
+		return (ContentList) super.clone();
 	}
 	
 	@Override
@@ -62,26 +85,7 @@ public class ContentList extends Content
 		
 		return true;
 	}
-
-	@Override
-	public int size() {
-		return contents.size();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return contents.isEmpty();
-	}
-
-	@Override
-	public boolean contains(Object o) {
-		return contents.contains(o);
-	}
-
-	@Override
-	public Iterator<Content> iterator() {
-		return contents.iterator();
-	}
+	
 
 	@Override
 	public Object[] toArray() {
@@ -92,17 +96,21 @@ public class ContentList extends Content
 	public <T> T[] toArray(T[] a) {
 		return contents.toArray(a);
 	}
-
+	
 	@Override
 	public boolean add(Content e) {
-		return contents.add(e);
+		boolean isDone = contents.add(e);
+		if (isDone) {
+			notifyWhenAdd(e);
+		}
+		return isDone;
 	}
 
 	@Override
 	public boolean remove(Object o) {
 		return contents.remove(o);
 	}
-
+	
 	@Override
 	public boolean containsAll(Collection<?> c) {
 		return contents.containsAll(c);
@@ -110,7 +118,12 @@ public class ContentList extends Content
 
 	@Override
 	public boolean addAll(Collection<? extends Content> c) {
-		return contents.addAll(c);
+		
+		boolean isDone = true;
+		for (Content item : c) {
+			isDone = isDone && add(item);
+		}
+		return isDone;
 	}
 
 	@Override
@@ -120,7 +133,7 @@ public class ContentList extends Content
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		return contents.retainAll(c);
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -140,7 +153,7 @@ public class ContentList extends Content
 
 	@Override
 	public Content set(int index, Content element) {
-		return contents.set(index, element);
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -165,17 +178,124 @@ public class ContentList extends Content
 
 	@Override
 	public ListIterator<Content> listIterator() {
-		return contents.listIterator();
+		return
+			new ContentReadOnlyListIterator(
+				contents.listIterator());
 	}
 
 	@Override
 	public ListIterator<Content> listIterator(int index) {
-		return contents.listIterator(index);
+		return
+			new ContentReadOnlyListIterator(
+				contents.listIterator(index));
 	}
 
 	@Override
-	public List<Content> subList(int fromIndex, int toIndex) {
-		return contents.subList(fromIndex, toIndex);
+	public ContentList subList(int fromIndex, int toIndex) {
+		ContentList newList = this.clone();
+		newList.contents = newList.contents.subList(fromIndex, toIndex);
+		return newList;
+	}
+	
+	@Override
+	public int size() {
+		return contents.size();
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return contents.isEmpty();
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return contents.contains(o);
+	}
+
+	@Override
+	public Iterator<Content> iterator() {
+		return
+			new ContentReadOnlyIterator(
+				contents.iterator());
+	}
+	
+	private static class ContentReadOnlyIterator implements Iterator<Content> {
+		
+		private Iterator<Content> innerIter;
+		
+		public ContentReadOnlyIterator(Iterator<Content> iter) {
+			innerIter = iter;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return innerIter.hasNext();
+		}
+
+		@Override
+		public Content next() {
+			return innerIter.next();
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+			
+		}
+	}
+	
+	private static class ContentReadOnlyListIterator implements ListIterator<Content> {
+		
+		private ListIterator<Content> innerIter;
+		
+		public ContentReadOnlyListIterator(ListIterator<Content> iter) {
+			innerIter = iter;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return innerIter.hasNext();
+		}
+
+		@Override
+		public Content next() {
+			return innerIter.next();
+		}
+
+		@Override
+		public boolean hasPrevious() {
+			return innerIter.hasPrevious();
+		}
+
+		@Override
+		public Content previous() {
+			return innerIter.previous();
+		}
+
+		@Override
+		public int nextIndex() {
+			return innerIter.nextIndex();
+		}
+
+		@Override
+		public int previousIndex() {
+			return innerIter.previousIndex();
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void set(Content e) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public void add(Content e) {
+			throw new UnsupportedOperationException();
+		}
+		
+	}
 }

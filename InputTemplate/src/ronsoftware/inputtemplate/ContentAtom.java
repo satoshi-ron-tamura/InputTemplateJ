@@ -47,4 +47,10 @@ public class ContentAtom extends Content {
 		return (ContentAtom) super.clone();
 	}
 
+	@Override
+	protected Content doClone() {
+		ContentAtom newItem = new ContentAtom(this.text);
+		return newItem;
+	}
+	
 }
