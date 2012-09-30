@@ -8,31 +8,18 @@ import java.util.Map;
  */
 public class ContentRoot implements ContentObserver {
 	
-	private ContentList contents = new ContentList();
+	private ContentList contents;
 	private Map<String, Content> idMap = new HashMap<String, Content>();
+	
+	public ContentRoot() {
+		contents = new ContentList();
+		contents.addObserver(this);
+	}
 	
 	public ContentList getContents() {
 		return contents;
 	}
 
-	protected Map<String, Content> getIdMap() {
-		return idMap;
-	}
-	
-	public ContentAtom createAtom(String text) {
-		
-		ContentAtom item = new ContentAtom(text);
-		item.addObserver(this);
-		return item;
-	}
-	
-	public ContentList createList() {
-		
-		ContentList itemList = new ContentList();
-		itemList.addObserver(this);
-		return itemList;
-	}
-	
 	@Override
 	public void updateId(String oldId, Content newContent) {
 		

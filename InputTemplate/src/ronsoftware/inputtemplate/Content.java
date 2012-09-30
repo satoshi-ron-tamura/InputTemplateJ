@@ -58,6 +58,10 @@ public abstract class Content implements Cloneable {
 	
 	protected void appendObserversTo(Content item) {
 		
+		if (item == null) {
+			return;
+		}
+		
 		if (item.isList()) {
 			ContentList itemList = item.asList();
 			for (Content c : itemList) {
@@ -70,7 +74,13 @@ public abstract class Content implements Cloneable {
 		}
 	}
 	
-	protected void removeObserversFrom(Content item) {
+	protected void removeObserversFrom(Object o) {
+		
+		if (o == null || !(o instanceof Content)) {
+			return;
+		}
+		
+		Content item = (Content) o;
 		
 		if (item.isList()) {
 			ContentList itemList = item.asList();

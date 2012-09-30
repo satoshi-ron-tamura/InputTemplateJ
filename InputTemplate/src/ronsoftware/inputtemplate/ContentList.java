@@ -41,6 +41,26 @@ public class ContentList extends Content
 		notifyUpdateId(null, item);
 	}
 	
+	protected void notifyWhenRemove(Object o) {
+		
+		if (o == null || !(o instanceof Content)) {
+			return;
+		}
+		
+		Content item = (Content) o;
+		
+		if (item.isList()) {
+			ContentList itemList = item.asList();
+			for (Content c : itemList) {
+				if (c != null) {
+					notifyWhenRemove(o);
+				}
+			}
+		}
+		
+		notifyUpdateId(item.getId(), null);
+	}
+	
 	@Override
 	public ContentList clone() {
 		return (ContentList) super.clone();
@@ -101,6 +121,7 @@ public class ContentList extends Content
 	public boolean add(Content e) {
 		boolean isDone = contents.add(e);
 		if (isDone) {
+			appendObserversTo(e);
 			notifyWhenAdd(e);
 		}
 		return isDone;
@@ -108,7 +129,12 @@ public class ContentList extends Content
 
 	@Override
 	public boolean remove(Object o) {
-		return contents.remove(o);
+		boolean isDone = contents.remove(o);
+		if (isDone) {
+			notifyWhenRemove(o);
+			removeObserversFrom(o);
+		}
+		return isDone;
 	}
 	
 	@Override
@@ -128,7 +154,12 @@ public class ContentList extends Content
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		return contents.removeAll(c);
+		
+		boolean isDone = true;
+		for (Object o : c) {
+			isDone = isDone && remove(o);
+		}
+		return isDone;
 	}
 
 	@Override
@@ -138,12 +169,23 @@ public class ContentList extends Content
 
 	@Override
 	public void clear() {
+		for (Content item : this) {
+			notifyWhenRemove(item);
+			removeObserversFrom(item);
+		}
 		contents.clear();
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends Content> c) {
-		return contents.addAll(index, c);
+		boolean isDone = contents.addAll(index, c);
+		if (isDone) {
+			for (Content item : c) {
+				appendObserversTo(item);
+				notifyWhenAdd(item);
+			}
+		}
+		return isDone;
 	}
 
 	@Override
@@ -159,11 +201,16 @@ public class ContentList extends Content
 	@Override
 	public void add(int index, Content element) {
 		contents.add(index, element);
+		appendObserversTo(element);
+		notifyWhenAdd(element);
 	}
 
 	@Override
 	public Content remove(int index) {
-		return contents.remove(index);
+		Content item = contents.remove(index);
+		notifyWhenRemove(item);
+		removeObserversFrom(item);
+		return item;
 	}
 
 	@Override

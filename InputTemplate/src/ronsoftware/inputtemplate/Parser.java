@@ -3,7 +3,6 @@ package ronsoftware.inputtemplate;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
 /**
  * Template parser.
@@ -24,7 +23,7 @@ public class Parser {
 		throws IOException, ParserException {
 		
 		ContentRoot root = new ContentRoot();
-		Token tok = parse(root.getContents(), root.getIdMap());
+		Token tok = parse(root.getContents());
 		
 		if (tok != null) {
 			throw new ParserException(
@@ -34,7 +33,7 @@ public class Parser {
 		return root;
 	}
 	
-	private Token parse(ContentList list, Map<String, Content> idMap)
+	private Token parse(ContentList list)
 		throws IOException, ParserException {
 		
 		Token tok = null;
@@ -46,7 +45,7 @@ public class Parser {
 			if (kind == Token.KIND_LPAR) {
 				
 				ContentList sub = new ContentList();
-				tok = parse(sub, idMap);
+				tok = parse(sub);
 				
 				if (tok == null) {
 					throw new ParserException(
@@ -69,14 +68,7 @@ public class Parser {
 				}
 				
 				String id = tok.toString();
-				
-				if (!idMap.containsKey(id)) {
-					list.setId(id);
-					idMap.put(id, list);
-				} else {
-					throw new ParserException(
-						"Id attributes must be unique.");
-				}
+				list.setId(id);
 				
 				tok = reader.readToken();
 				
