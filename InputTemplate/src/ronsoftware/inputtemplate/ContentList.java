@@ -53,7 +53,7 @@ public class ContentList extends Content
 			ContentList itemList = item.asList();
 			for (Content c : itemList) {
 				if (c != null) {
-					notifyWhenRemove(o);
+					notifyWhenRemove(c);
 				}
 			}
 		}

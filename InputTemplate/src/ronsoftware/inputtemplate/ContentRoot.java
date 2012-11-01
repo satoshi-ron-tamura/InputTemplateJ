@@ -16,10 +16,30 @@ public class ContentRoot implements ContentObserver {
 		contents.addObserver(this);
 	}
 	
+	/**
+	 * Get a content list instance.
+	 * @return The content list instance.
+	 */
 	public ContentList getContents() {
 		return contents;
 	}
 
+	/**
+	 * Get a content instance by an identifier.
+	 * @param id    An identifier.
+	 * @return The content instance.
+	 *          If the identifier couldn't be found,
+	 *          returns null.
+	 */
+	public Content getContentById(String id) {
+		
+		if (idMap.containsKey(id)) {
+			return idMap.get(id);
+		} else {
+			return null;
+		}
+	}
+	
 	@Override
 	public void updateId(String oldId, Content newContent) {
 		
