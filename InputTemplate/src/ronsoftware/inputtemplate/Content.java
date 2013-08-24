@@ -125,18 +125,7 @@ public abstract class Content implements Cloneable {
 		
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((classAttr == null) ? 0 : classAttr.hashCode());
-		result = prime * result + ((attrs == null) ? 0 : attrs.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
+	public boolean equalsByValue(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)

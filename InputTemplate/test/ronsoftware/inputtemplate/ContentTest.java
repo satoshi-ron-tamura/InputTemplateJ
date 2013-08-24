@@ -14,7 +14,7 @@ public class ContentTest {
 		ContentList orign = createStandardCase();
 		ContentList cloned = orign.clone();
 		
-		assertEquals("orign equals cloned.", orign, cloned);
+		assertTrue("orign equals cloned.", orign.equalsByValue(cloned));
 		assertFalse("orign and orign are same.", areDifferentTree(orign, orign));
 		assertFalse("cloned and cloned are same.", areDifferentTree(cloned, cloned));
 		assertTrue("orign and cloned are different.", areDifferentTree(orign, cloned));

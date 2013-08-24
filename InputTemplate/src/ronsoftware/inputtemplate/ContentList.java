@@ -67,18 +67,9 @@ public class ContentList extends Content
 	}
 	
 	@Override
-	public int hashCode() {
-		int result = super.hashCode();
-		for (Content content : contents) {
-			result = result ^ content.hashCode();
-		}
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
+	public boolean equalsByValue(Object obj) {
 		
-		if (!super.equals(obj))
+		if (!super.equalsByValue(obj))
 			return false;
 		
 		ContentList other = (ContentList) obj;
@@ -91,7 +82,7 @@ public class ContentList extends Content
 		while (i.hasNext()) {
 			Content x = i.next();
 			Content y = j.next();
-			if (!x.equals(y)) {
+			if (!x.equalsByValue(y)) {
 				return false;
 			}
 		}

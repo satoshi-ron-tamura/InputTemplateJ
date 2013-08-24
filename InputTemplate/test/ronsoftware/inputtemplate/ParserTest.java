@@ -71,7 +71,7 @@ public class ParserTest {
 			assertEquals(msg,
 				printer.getPrint(expected), 
 				printer.getPrint(parsed.getContents()));
-			assertEquals(msg, expected, parsed.getContents());
+			assertTrue(msg, expected.equalsByValue(parsed.getContents()));
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
