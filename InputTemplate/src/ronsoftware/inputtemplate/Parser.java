@@ -67,8 +67,8 @@ public class Parser {
 						"Attribute value required.");
 				}
 				
-				String id = tok.toString();
-				list.setId(id);
+				String attrs = tok.toString();
+				list.setAttrs(attrs);
 				
 				tok = reader.readToken();
 				

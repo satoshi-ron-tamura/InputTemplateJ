@@ -14,15 +14,6 @@ public class ContentList extends Content
 	
 	private List<Content> contents = new ArrayList<Content>();
 	
-	@Override
-	protected Content doClone() {
-		ContentList newList = new ContentList();
-		for (Content item : this) {
-			newList.add(item.clone());
-		}
-		return newList;
-	}
-	
 	protected void notifyWhenAdd(Content item) {
 		
 		if (item == null) {
@@ -38,7 +29,7 @@ public class ContentList extends Content
 			}
 		}
 		
-		notifyUpdateId(null, item);
+		notifyUpdate(null, item);
 	}
 	
 	protected void notifyWhenRemove(Object o) {
@@ -58,7 +49,7 @@ public class ContentList extends Content
 			}
 		}
 		
-		notifyUpdateId(item.getId(), null);
+		notifyUpdate(item, null);
 	}
 	
 	@Override
@@ -67,11 +58,17 @@ public class ContentList extends Content
 	}
 	
 	@Override
+	protected Content doClone() {
+		ContentList newList = new ContentList();
+		for (Content item : this) {
+			newList.add(item.clone());
+		}
+		return newList;
+	}
+	
+	@Override
 	public int hashCode() {
-		int result = 0;
-		if (contents == null)
-			return result;
-		
+		int result = super.hashCode();
 		for (Content content : contents) {
 			result = result ^ content.hashCode();
 		}
@@ -81,11 +78,7 @@ public class ContentList extends Content
 	@Override
 	public boolean equals(Object obj) {
 		
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (!super.equals(obj))
 			return false;
 		
 		ContentList other = (ContentList) obj;

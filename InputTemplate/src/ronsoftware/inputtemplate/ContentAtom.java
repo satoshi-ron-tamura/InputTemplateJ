@@ -15,24 +15,19 @@ public class ContentAtom extends Content {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+		
+		if (!super.equals(obj))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		
 		ContentAtom other = (ContentAtom) obj;
-		if (text == null) {
-			if (other.text != null)
-				return false;
-		} else if (!text.equals(other.text))
+		if (!testEqual(this.text, other.text))
 			return false;
 		return true;
 	}

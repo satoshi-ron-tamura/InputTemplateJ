@@ -4,32 +4,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a template content element.
+ * This class represents a template content element.
  */
 public abstract class Content implements Cloneable {
 	
+	private static final AttrsParser attrsParser = new AttrsParser();
+	
 	private String id;
+	private String classAttr;
+	private String attrs;
 	private List<ContentObserver> observers = new ArrayList<ContentObserver>();
 	
 	public String getId() {
 		return id;
 	}
 
-	protected void setId(String id) {
+	public void setId(String id) {
 		
-		String oldId = this.id;
+		Content oldContent = this.clone();
+		String oldId = oldContent.getId();
 		this.id = id;
 		
 		if (oldId == null || !oldId.equals(this.id)) {
 			try {
-				notifyUpdateId(oldId, this);
+				notifyUpdate(oldContent, this);
 			} catch (Exception e) {
 				this.id = oldId;
 				throw new RuntimeException(e);
 			}
 		}
 	}
-
+	
+	public String getClassAttr() {
+		return classAttr;
+	}
+	
+	public void setClassAttr(String classAttr) {
+		this.classAttr = classAttr;
+	}
+	
+	public String getAttrs() {
+		return attrs;
+	}
+	
+	public void setAttrs(String attrs) {
+		this.attrs = attrs;
+		if (attrs != null)
+			attrsParser.parse(attrs, this);
+	}
+	
 	public boolean isAtom() {
 		return this instanceof ContentAtom;
 	}
@@ -94,22 +117,50 @@ public abstract class Content implements Cloneable {
 		}
 	}
 	
-	protected void notifyUpdateId(String oldId, Content newContent) {
+	protected void notifyUpdate(Content oldContent, Content newContent) {
 		
 		for (ContentObserver ob : observers) {
-			ob.updateId(oldId, newContent);
+			ob.updateContent(oldContent, newContent);
 		}
 		
 	}
 	
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((classAttr == null) ? 0 : classAttr.hashCode());
+		result = prime * result + ((attrs == null) ? 0 : attrs.hashCode());
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		return super.equals(obj);
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		
+		Content other = (Content) obj;
+		if (!testEqual(this.id, other.id))
+			return false;
+		if (!testEqual(this.classAttr, other.classAttr))
+			return false;
+		if (!testEqual(this.attrs, other.attrs))
+			return false;
+		return true;
+	}
+	
+	static protected boolean testEqual(Object x, Object y) {
+		if (x == null) {
+			if (y != null)
+				return false;
+		} else if (!x.equals(y))
+			return false;
+		return true;
 	}
 	
 	@Override
@@ -121,6 +172,8 @@ public abstract class Content implements Cloneable {
 	public Content clone() {
 		Content newItem = doClone();
 		newItem.id = this.id;
+		newItem.classAttr = this.classAttr;
+		newItem.attrs = this.attrs;
 		return newItem;
 	}
 }
