@@ -91,8 +91,10 @@ public class ContentRoot implements ContentObserver {
 		if (oldClass != null)
 			removeClassEntry(oldClass, oldContent);
 		
-		if (newClass != null)
+		if (newClass != null) {
+			removeClassEntry(oldClass, newContent);
 			putClassEntry(newClass, newContent);
+		}
 	}
 	
 	private void removeClassEntry(String name, Content content) {
