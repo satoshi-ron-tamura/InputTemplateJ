@@ -63,6 +63,22 @@ public class ContentRoot implements ContentObserver {
 		return results;
 	}
 	
+	/**
+	 * Get the number of identifiers in the content structure.
+	 * @return the number of identifiers.
+	 */
+	public int getIdCount() {
+		return idMap.size();
+	}
+	
+	/**
+	 * Get the number of classes in the content structure.
+	 * @return the number of classes.
+	 */
+	public int getClassCount() {
+		return classMap.size();
+	}
+	
 	protected void updateId(Content oldContent, Content newContent) {
 		String oldId = null;
 		if (oldContent != null)

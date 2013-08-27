@@ -10,12 +10,11 @@ public class AttrsParser {
 	
 	public void parse(String attrs, Content content) {
 		Matcher m = inputPat.matcher(attrs);
-		int gc = m.groupCount();
-		int gi = 0;
-		if (gi < gc)
-			content.setId(m.group(gi));
-		gi++;
-		if (gi < gc)
-			;
+		if (m.matches()) {
+			if (!"".equals(m.group(1)))
+				content.setId(m.group(1));
+			if (!"".equals(m.group(2)))
+				content.setClassAttr(m.group(2));
+		}
 	}
 }

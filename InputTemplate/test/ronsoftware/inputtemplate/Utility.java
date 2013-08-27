@@ -91,4 +91,30 @@ public class Utility {
 		
 		return builder.getRoot();
 	}
+	
+	public static ContentList createIdAndClassCase() {
+		
+		ContentBuilder builder = new ContentBuilder();
+		builder.addAttrs("id1.class1")
+			.addAtom("a b c\n")
+			.addList()
+				.addList().addAttrs("id2.class1")
+					.addAtom("a\n")
+					.getParent()
+				.addList().addAttrs("id3.class2")
+					.addAtom("b\n")
+					.getParent()
+				.addList().addAttrs("id4.class2")
+					.addAtom("c\n")
+					.getParent()
+				.getParent()
+			.addAtom(" a b c ")
+			.addList().addAttrs("id5")
+				.addAtom("a b c")
+				.getParent()
+			.addList().addAttrs(".class3")
+				.addAtom("a");
+		
+		return builder.getRoot();
+	}
 }

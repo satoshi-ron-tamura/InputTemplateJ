@@ -39,4 +39,9 @@ public class ContentBuilder {
 		root.add(sub);
 		return new ContentBuilder(this, sub);
 	}
+	
+	public ContentBuilder addAttrs(String attrs) {
+		root.setAttrs(attrs);
+		return this;
+	}
 }
